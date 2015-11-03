@@ -89,7 +89,7 @@ func NewAPIClient() *APIClient {
 	}
 }
 
-func (client *APIClient) CreateInteger() (int, error) {
+func (client *APIClient) CreateInteger() (int64, error) {
 
 	params := url.Values{}
 
@@ -115,7 +115,7 @@ func (client *APIClient) CreateInteger() (int, error) {
 		return 0, errors.New("Failed to parse response")
 	}
 
-	i := int(f)
+	i := int64(f)
 
 	return i, nil
 }
