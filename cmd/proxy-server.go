@@ -1,7 +1,7 @@
 package main
 
 import (
-       "flag"
+	"flag"
 	_ "fmt"
 	api "github.com/whosonfirst/go-brooklynintegers-api"
 	"io"
@@ -96,14 +96,22 @@ func (p *Proxy) Monitor() {
 
 		if p.Pool.Length() < p.MinPool {
 
+			wg := new(sync.WaitGroup)
+
 			todo := p.MinPool - p.Pool.Length()
 
 			for j := 0; int64(j) < todo; j++ {
 
+				wg.Add(1)
+
 				go func(pr *Proxy) {
+
+					defer wg.Done()
 					pr.AddToPool()
 				}(p)
 			}
+
+			wg.Wait()
 		}
 
 		time.Sleep(1 * time.Second)
@@ -153,7 +161,6 @@ func main() {
 
 	proxy := NewProxy(int64(*min))
 	proxy.Init()
-
 
 	handler := func(rsp http.ResponseWriter, r *http.Request) {
 
