@@ -64,6 +64,8 @@ return i, nil
 
 ### proxy-server
 
+Proxy, pre-load and buffer requests to the Brooklyn Integers `brooklyn.integers.create` API method.
+
 ```
 $> ./bin/proxy-server -h
 Usage of ./bin/proxy-server:
