@@ -72,7 +72,7 @@ Usage of ./bin/proxy-server:
   -cors
 	Enable CORS headers
   -min int
-        (default 10)
+       The minimum number of Brooklyn Integers to keep on hand at all times (default 10)
   -port int
     	Port to listen (default 8080)
 ```
