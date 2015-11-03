@@ -1,8 +1,13 @@
 package main
 
 import (
-	"fmt"
+       "flag"
+	_ "fmt"
 	api "github.com/whosonfirst/go-brooklynintegers-api"
+	"io"
+	"log"
+	"net/http"
+	"strconv"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -48,10 +53,9 @@ type Proxy struct {
 	Client  *api.APIClient
 	Pool    *Pool
 	MinPool int64
-	MaxPool int64
 }
 
-func NewProxy(min_pool int64, max_pool int64) *Proxy {
+func NewProxy(min_pool int64) *Proxy {
 
 	client := api.NewAPIClient()
 	pool := NewPool()
@@ -60,7 +64,6 @@ func NewProxy(min_pool int64, max_pool int64) *Proxy {
 		Client:  client,
 		Pool:    pool,
 		MinPool: min_pool,
-		MaxPool: max_pool,
 	}
 
 	return &proxy
@@ -142,17 +145,39 @@ func (p *Proxy) Integer() (int64, error) {
 
 func main() {
 
-	proxy := NewProxy(10, 15)
+	var port = flag.Int("port", 8080, "Port to listen")
+	var min = flag.Int("min", 10, "")
+	var cors = flag.Bool("cors", false, "Enable CORS headers")
+
+	flag.Parse()
+
+	proxy := NewProxy(int64(*min))
 	proxy.Init()
 
-	fmt.Println(proxy.Pool.Length())
 
-	for j := 0; j < 20; j++ {
-		i, _ := proxy.Integer()
-		fmt.Println(i)
-		fmt.Println(proxy.Pool.Length())
+	handler := func(rsp http.ResponseWriter, r *http.Request) {
+
+		i, err := proxy.Integer()
+
+		if err != nil {
+			http.Error(rsp, "Unknown placetype", http.StatusBadRequest)
+		}
+
+		if *cors {
+			rsp.Header().Set("Access-Control-Allow-Origin", "*")
+			return
+		}
+
+		io.WriteString(rsp, strconv.Itoa(int(i)))
 	}
 
-	time.Sleep(5 * time.Second)
-	fmt.Println(proxy.Pool.Length())
+	http.HandleFunc("/", handler)
+
+	str_port := ":" + strconv.Itoa(*port)
+	err := http.ListenAndServe(str_port, nil)
+
+	if err != nil {
+		log.Fatal("Failed to start server, because %v\n", err)
+	}
+
 }
