@@ -154,7 +154,7 @@ func (p *Proxy) Integer() (int64, error) {
 func main() {
 
 	var port = flag.Int("port", 8080, "Port to listen")
-	var min = flag.Int("min", 10, "")
+	var min = flag.Int("min", 10, "The minimum number of Brooklyn Integers to keep on hand at all times")
 	var cors = flag.Bool("cors", false, "Enable CORS headers")
 
 	flag.Parse()
