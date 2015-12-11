@@ -1,64 +1,29 @@
 package main
 
 import (
+       "errors"
 	"flag"
 	_ "fmt"
 	api "github.com/whosonfirst/go-brooklynintegers-api"
+	pool "github.com/whosonfirst/go-whosonfirst-pool"
 	"io"
 	"log"
 	"net/http"
 	"strconv"
 	"sync"
-	"sync/atomic"
 	"time"
 )
 
-// https://github.com/SimonWaldherr/golang-examples/blob/2be89f3185aded00740a45a64e3c98855193b948/advanced/lifo.go
-
-func NewPool() *Pool {
-	return &Pool{mutex: &sync.Mutex{}}
-}
-
-type Pool struct {
-	nodes []int64
-	count int64
-	mutex *sync.Mutex
-}
-
-func (pl *Pool) Length() int64 {
-	return pl.count
-}
-
-func (pl *Pool) Push(n int64) {
-	pl.nodes = append(pl.nodes[:pl.count], n)
-	atomic.AddInt64(&pl.count, 1)
-}
-
-func (pl *Pool) Pop() int64 {
-
-	if pl.count == 0 {
-		return 0
-	}
-
-	pl.mutex.Lock()
-
-	atomic.AddInt64(&pl.count, -1)
-	i := pl.nodes[pl.count]
-
-	pl.mutex.Unlock()
-	return i
-}
-
 type Proxy struct {
 	Client  *api.APIClient
-	Pool    *Pool
+	Pool    *pool.LIFOPool
 	MinPool int64
 }
 
 func NewProxy(min_pool int64) *Proxy {
 
 	client := api.NewAPIClient()
-	pool := NewPool()
+	pool := pool.NewLIFOPool()
 
 	proxy := Proxy{
 		Client:  client,
@@ -126,7 +91,9 @@ func (p *Proxy) AddToPool() bool {
 		return false
 	}
 
-	p.Pool.Push(i)
+	pi := pool.PoolInt{Int:i}
+
+	p.Pool.Push(pi)
 	return true
 }
 
@@ -147,8 +114,13 @@ func (p *Proxy) Integer() (int64, error) {
 		return p.GetInteger()
 	}
 
-	i := p.Pool.Pop()
-	return i, nil
+	i, ok := p.Pool.Pop()
+
+	if !ok {
+	   return 0, errors.New("Failed to pop")
+	}
+
+	return i.IntValue(), nil
 }
 
 func main() {
