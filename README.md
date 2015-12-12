@@ -95,7 +95,7 @@ As in:
 [big-integer] 02:48:18.705313 [status] pool length: 100
 [big-integer] 02:48:23.705487 [status] pool length: 100
 [big-integer] 02:48:28.705684 [status] pool length: 100
-``
+```
 
 And then:
 
