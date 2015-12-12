@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"flag"
-	_ "fmt"
+	"fmt"
 	api "github.com/whosonfirst/go-brooklynintegers-api"
 	log "github.com/whosonfirst/go-whosonfirst-log"
 	pool "github.com/whosonfirst/go-whosonfirst-pool"
@@ -102,6 +102,7 @@ func (p *Proxy) GetInteger() (int64, error) {
 		return 0, err
 	}
 
+	p.logger.Debug("got new integer %d", i)
 	return i, nil
 }
 
@@ -111,13 +112,18 @@ func (p *Proxy) Integer() (int64, error) {
 		return p.GetInteger()
 	}
 
-	i, ok := p.pool.Pop()
+	v, ok := p.pool.Pop()
 
 	if !ok {
+		p.logger.Error("failed to pop integer!")
 		return 0, errors.New("Failed to pop")
 	}
 
-	return i.IntValue(), nil
+	i := v.IntValue()
+
+	p.logger.Debug("return cached integer %d", i)
+
+	return i, nil
 }
 
 func main() {
@@ -142,7 +148,8 @@ func main() {
 		i, err := proxy.Integer()
 
 		if err != nil {
-			http.Error(rsp, "Unknown placetype", http.StatusBadRequest)
+		   	msg := fmt.Sprintf("Failed to retrieve integer because %v", err)
+			http.Error(rsp, msg, http.StatusBadRequest)
 		}
 
 		if *cors {
