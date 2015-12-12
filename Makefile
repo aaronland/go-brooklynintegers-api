@@ -13,6 +13,7 @@ fmt:
 deps:
 	go get "github.com/jeffail/gabs"
 	go get "github.com/whosonfirst/go-whosonfirst-pool"
+	go get "github.com/whosonfirst/go-whosonfirst-log"
 
 bin:	int proxy
 

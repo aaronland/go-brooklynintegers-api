@@ -5,30 +5,33 @@ import (
 	"flag"
 	_ "fmt"
 	api "github.com/whosonfirst/go-brooklynintegers-api"
+	log "github.com/whosonfirst/go-whosonfirst-log"
 	pool "github.com/whosonfirst/go-whosonfirst-pool"
 	"io"
-	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"sync"
 	"time"
 )
 
 type Proxy struct {
-	Client  *api.APIClient
-	Pool    *pool.LIFOPool
-	MinPool int64
+        logger  *log.WOFLogger
+	client  *api.APIClient
+	pool    *pool.LIFOPool
+	minpool int64
 }
 
-func NewProxy(min_pool int64) *Proxy {
+func NewProxy(min_pool int64, logger *log.WOFLogger) *Proxy {
 
-	client := api.NewAPIClient()
+	api_client := api.NewAPIClient()
 	pool := pool.NewLIFOPool()
 
 	proxy := Proxy{
-		Client:  client,
-		Pool:    pool,
-		MinPool: min_pool,
+		logger:  logger,
+		client:  api_client,
+		pool:    pool,
+		minpool: min_pool,
 	}
 
 	return &proxy
@@ -38,7 +41,7 @@ func (p *Proxy) Init() {
 
 	wg := new(sync.WaitGroup)
 
-	for i := 0; int64(i) < p.MinPool; i++ {
+	for i := 0; int64(i) < p.minpool; i++ {
 
 		wg.Add(1)
 
@@ -59,11 +62,13 @@ func (p *Proxy) Monitor() {
 
 	for {
 
-		if p.Pool.Length() < p.MinPool {
+	        p.logger.Debug("pool: %d", p.pool.Length())
+
+		if p.pool.Length() < p.minpool {
 
 			wg := new(sync.WaitGroup)
 
-			todo := p.MinPool - p.Pool.Length()
+			todo := p.minpool - p.pool.Length()
 
 			for j := 0; int64(j) < todo; j++ {
 
@@ -93,13 +98,13 @@ func (p *Proxy) AddToPool() bool {
 
 	pi := pool.PoolInt{Int:i}
 
-	p.Pool.Push(pi)
+	p.pool.Push(pi)
 	return true
 }
 
 func (p *Proxy) GetInteger() (int64, error) {
 
-	i, err := p.Client.CreateInteger()
+	i, err := p.client.CreateInteger()
 
 	if err != nil {
 		return 0, err
@@ -110,11 +115,11 @@ func (p *Proxy) GetInteger() (int64, error) {
 
 func (p *Proxy) Integer() (int64, error) {
 
-	if p.Pool.Length() == 0 {
+	if p.pool.Length() == 0 {
 		return p.GetInteger()
 	}
 
-	i, ok := p.Pool.Pop()
+	i, ok := p.pool.Pop()
 
 	if !ok {
 	   return 0, errors.New("Failed to pop")
@@ -126,12 +131,18 @@ func (p *Proxy) Integer() (int64, error) {
 func main() {
 
 	var port = flag.Int("port", 8080, "Port to listen")
-	var min = flag.Int("min", 10, "The minimum number of Brooklyn Integers to keep on hand at all times")
+	var min = flag.Int("min", 1, "The minimum number of Brooklyn Integers to keep on hand at all times")
+	var loglevel = flag.String("loglevel", "info", "Log level")
 	var cors = flag.Bool("cors", false, "Enable CORS headers")
 
 	flag.Parse()
 
-	proxy := NewProxy(int64(*min))
+	writer := io.MultiWriter(os.Stdout)
+
+	logger := log.NewWOFLogger("[big-integer] ")
+	logger.AddLogger(writer, *loglevel)
+
+	proxy := NewProxy(int64(*min), logger)
 	proxy.Init()
 
 	handler := func(rsp http.ResponseWriter, r *http.Request) {
@@ -156,7 +167,7 @@ func main() {
 	err := http.ListenAndServe(str_port, nil)
 
 	if err != nil {
-		log.Fatal("Failed to start server, because %v\n", err)
+		logger.Fatal("Failed to start server, because %v\n", err)
 	}
 
 }
