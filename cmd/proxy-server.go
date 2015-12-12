@@ -1,7 +1,7 @@
 package main
 
 import (
-       "errors"
+	"errors"
 	"flag"
 	_ "fmt"
 	api "github.com/whosonfirst/go-brooklynintegers-api"
@@ -16,7 +16,7 @@ import (
 )
 
 type Proxy struct {
-        logger  *log.WOFLogger
+	logger  *log.WOFLogger
 	client  *api.APIClient
 	pool    *pool.LIFOPool
 	minpool int64
@@ -39,19 +39,7 @@ func NewProxy(min_pool int64, logger *log.WOFLogger) *Proxy {
 
 func (p *Proxy) Init() {
 
-	wg := new(sync.WaitGroup)
-
-	for i := 0; int64(i) < p.minpool; i++ {
-
-		wg.Add(1)
-
-		go func(pr *Proxy) {
-			defer wg.Done()
-			pr.AddToPool()
-		}(p)
-	}
-
-	wg.Wait()
+	go p.RefillPool()
 
 	go func() {
 		p.Monitor()
@@ -62,30 +50,34 @@ func (p *Proxy) Monitor() {
 
 	for {
 
-	        p.logger.Debug("pool: %d", p.pool.Length())
+		p.logger.Debug("pool: %d", p.pool.Length())
 
 		if p.pool.Length() < p.minpool {
-
-			wg := new(sync.WaitGroup)
-
-			todo := p.minpool - p.pool.Length()
-
-			for j := 0; int64(j) < todo; j++ {
-
-				wg.Add(1)
-
-				go func(pr *Proxy) {
-
-					defer wg.Done()
-					pr.AddToPool()
-				}(p)
-			}
-
-			wg.Wait()
+			p.RefillPool()
 		}
 
 		time.Sleep(1 * time.Second)
 	}
+}
+
+func (p *Proxy) RefillPool() {
+
+	wg := new(sync.WaitGroup)
+
+	todo := p.minpool - p.pool.Length()
+
+	for j := 0; int64(j) < todo; j++ {
+
+		wg.Add(1)
+
+		go func(pr *Proxy) {
+
+			defer wg.Done()
+			pr.AddToPool()
+		}(p)
+	}
+
+	wg.Wait()
 }
 
 func (p *Proxy) AddToPool() bool {
@@ -96,7 +88,7 @@ func (p *Proxy) AddToPool() bool {
 		return false
 	}
 
-	pi := pool.PoolInt{Int:i}
+	pi := pool.PoolInt{Int: i}
 
 	p.pool.Push(pi)
 	return true
@@ -122,7 +114,7 @@ func (p *Proxy) Integer() (int64, error) {
 	i, ok := p.pool.Pop()
 
 	if !ok {
-	   return 0, errors.New("Failed to pop")
+		return 0, errors.New("Failed to pop")
 	}
 
 	return i.IntValue(), nil
