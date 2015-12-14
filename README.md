@@ -1,6 +1,6 @@
 # go-brooklynintegers-api
 
-Go language API library for the Brooklyn Integers API.
+Go package for the Brooklyn Integers API.
 
 ## Usage
 
