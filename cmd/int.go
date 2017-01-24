@@ -1,14 +1,28 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	api "github.com/whosonfirst/go-brooklynintegers-api"
+	"github.com/whosonfirst/go-brooklynintegers-api"
+	"log"
 )
 
 func main() {
 
-	client := api.NewAPIClient()
-	i, _ := client.CreateInteger()
+	var count = flag.Int("count", 1, "The number of Brooklyn Integers to mint")
 
-	fmt.Println(i)
+	flag.Parse()
+
+	client := api.NewAPIClient()
+
+	for i := 0; i < *count; i++ {
+
+		i, err := client.CreateInteger()
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(i)
+	}
 }
