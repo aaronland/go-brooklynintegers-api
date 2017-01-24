@@ -2,6 +2,16 @@
 
 Go package for the Brooklyn Integers API.
 
+## Install
+
+You will need to have both `Go` and the `make` programs installed on your computer. Assuming you do just type:
+
+```
+make bin
+```
+
+All of this package's dependencies are bundled with the code in the `vendor` directory.
+
 ## Usage
 
 ## Simple
@@ -60,7 +70,22 @@ i := int64(f)
 return i, nil
 ```
 
-## HTTP Ponies
+## Tools
+
+### int
+
+Mint one or more Brooklyn Integers.
+
+```
+$> ./bin/int -h
+Usage of ./bin/int:
+  -count int
+    	The number of Brooklyn Integers to mint (default 1)
+  -tts
+    	Output integers to a text-to-speak engine.
+  -tts-engine string
+    	A valid go-writer-tts text-to-speak engine. Valid options are: osx.
+```
 
 ### proxy-server
 
