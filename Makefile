@@ -14,6 +14,7 @@ deps:
 	@GOPATH=$(shell pwd) go get "github.com/jeffail/gabs"
 	@GOPATH=$(shell pwd) go get "github.com/whosonfirst/go-whosonfirst-pool"
 	@GOPATH=$(shell pwd) go get "github.com/whosonfirst/go-whosonfirst-log"
+	@GOPATH=$(shell pwd) go get "github.com/whosonfirst/go-writer-tts"
 
 vendor-deps: rmdeps deps
 	if test ! -d vendor; then mkdir vendor; fi
