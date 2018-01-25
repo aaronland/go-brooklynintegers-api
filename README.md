@@ -21,7 +21,7 @@ package main
 
 import (
 	"fmt"
-	api "github.com/whosonfirst/go-brooklynintegers-api"
+	"github.com/aaronland/go-brooklynintegers-api"
 )
 
 func main() {
@@ -38,36 +38,21 @@ func main() {
 ```
 import (
        "fmt"
-       api "github.com/whosonfirst/go-brooklynintegers-api"
+       "github.com/aaronland/go-brooklynintegers-api"
 )
 
-client := api.NewAPIClient()
+func main() {
 
-method := "brooklyn.integers.create"
-params := url.Values{}
+	client := api.NewAPIClient()
 
-rsp, err := client.ExecuteMethod(method, &params)
+	params := url.Values{}
+	method := "brooklyn.integers.create"
 
-if err != nil {
-	return 0, err
+	rsp, _ := client.ExecuteMethod(method, &params)
+	i, _ := rsp.Int()
+
+	fmt.Println(i)
 }
-
-ints, _ := rsp.Parsed.S("integers").Children()
-
-if len(ints) == 0 {
-	return 0, errors.New("Failed to generate any integers")
-}
-
-first := ints[0]
-
-f, ok := first.Path("integer").Data().(float64)
-
-if !ok {
-	return 0, errors.New("Failed to parse response")
-}
-
-i := int64(f)
-return i, nil
 ```
 
 ## Tools
@@ -81,10 +66,6 @@ $> ./bin/int -h
 Usage of ./bin/int:
   -count int
     	The number of Brooklyn Integers to mint (default 1)
-  -tts
-    	Output integers to a text-to-speak engine.
-  -tts-engine string
-    	A valid go-writer-tts text-to-speak engine. Valid options are: osx.
 ```
 
 ### proxy-server
