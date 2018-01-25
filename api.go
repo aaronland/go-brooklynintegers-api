@@ -2,7 +2,7 @@ package api
 
 import (
 	"errors"
-	"github.com/jeffail/gabs"
+	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"net/http"
 	"net/url"

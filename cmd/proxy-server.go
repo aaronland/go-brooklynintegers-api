@@ -4,7 +4,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	api "github.com/whosonfirst/go-brooklynintegers-api"
+	api "github.com/aaronland/go-brooklynintegers-api"
 	log "github.com/whosonfirst/go-whosonfirst-log"
 	pool "github.com/whosonfirst/go-whosonfirst-pool"
 	"io"
