@@ -3,6 +3,7 @@ package api
 import (
 	"errors"
 	"fmt"
+	"github.com/aaronland/go-artisanal-integers"
 	"github.com/tidwall/gjson"
 	"io/ioutil"
 	_ "log"
@@ -11,6 +12,7 @@ import (
 )
 
 type APIClient struct {
+     artisanalinteger.Client
 	isa      string
 	http_client *http.Client
 	Scheme   string
@@ -86,7 +88,7 @@ func (rsp *APIResponse) Error() error {
 	return &err
 }
 
-func NewAPIClient() *APIClient {
+func NewAPIClient() artisanalinteger.Client {
 
 	http_client := &http.Client{}
 
@@ -98,12 +100,12 @@ func NewAPIClient() *APIClient {
 	}
 }
 
-func (client *APIClient) CreateInteger() (int64, error) {
+func (client *APIClient) NextInt() (int64, error) {
 
 	params := url.Values{}
 	method := "brooklyn.integers.create"
 
-	rsp, err := client.ExecuteMethod(method, &params)
+	rsp, err := client.executeMethod(method, &params)
 
 	if err != nil {
 		return -1, err
@@ -112,7 +114,7 @@ func (client *APIClient) CreateInteger() (int64, error) {
 	return rsp.Int()
 }
 
-func (client *APIClient) ExecuteMethod(method string, params *url.Values) (*APIResponse, error) {
+func (client *APIClient) executeMethod(method string, params *url.Values) (*APIResponse, error) {
 
 	url := client.Scheme + "://" + client.Host + "/" + client.Endpoint
 

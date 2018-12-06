@@ -11,6 +11,7 @@ rmdeps:
 	if test -d src; then rm -rf src; fi 
 
 deps:
+	@GOPATH=$(shell pwd) go get "github.com/aaronland/go-artisanal-integers"
 	@GOPATH=$(shell pwd) go get "github.com/tidwall/gjson"
 
 vendor-deps: rmdeps deps

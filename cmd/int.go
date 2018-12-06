@@ -61,7 +61,7 @@ func main() {
 				return
 			}
 
-			bi, err := client.CreateInteger()
+			bi, err := client.NextInt()
 
 			if err != nil {
 				log.Println(err)
