@@ -2,17 +2,22 @@ package main
 
 import (
        "fmt"
-       pool "github.com/whosonfirst/go-whosonfirst-pool"
+       "github.com/whosonfirst/go-whosonfirst-pool"
+       "log"
 )
 
 func main() {
 
-     p := pool.NewLIFOPool()
+     p, err := pool.NewMemLIFOPool()
 
-     f := pool.PoolInt{Int:int64(123)}
+     if err != nil {
+     	log.Fatal(err)
+     }
+
+     f := pool.NewIntItem(int64(123))
 
      p.Push(f)
      v, _ := p.Pop()
 
-     fmt.Printf("%d", v.IntValue())
+     fmt.Printf("%d", v.Int())
 }

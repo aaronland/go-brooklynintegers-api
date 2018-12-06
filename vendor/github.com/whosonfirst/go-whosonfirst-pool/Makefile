@@ -12,4 +12,4 @@ fmt:
 	go fmt *.go
 
 bin: 	self
-
+	@GOPATH=$(shell pwd) go build -o bin/int-pool cmd/int-pool.go

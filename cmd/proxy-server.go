@@ -4,9 +4,9 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	api "github.com/aaronland/go-brooklynintegers-api"
-	log "github.com/whosonfirst/go-whosonfirst-log"
-	pool "github.com/whosonfirst/go-whosonfirst-pool"
+	"github.com/aaronland/go-brooklynintegers-api"
+	"github.com/whosonfirst/go-whosonfirst-log"
+	"github.com/whosonfirst/go-whosonfirst-pool"
 	"io"
 	"net/http"
 	"os"
@@ -15,10 +15,13 @@ import (
 	"time"
 )
 
+// this needs to be tweaked to keep a not-just-in-memory copy of the
+// pool so that we can use this in offline-mode (20181206/thisisaaronland)
+
 type Proxy struct {
 	logger  *log.WOFLogger
 	client  *api.APIClient
-	pool    *pool.LIFOPool
+	pool    pool.LIFOPool
 	minpool int64
 	refill  chan bool
 }
@@ -26,7 +29,7 @@ type Proxy struct {
 func NewProxy(min_pool int64, logger *log.WOFLogger) *Proxy {
 
 	api_client := api.NewAPIClient()
-	pool := pool.NewLIFOPool()
+	pool, _ := pool.NewMemLIFOPool()
 
 	// See notes in RefillPool() for details
 
@@ -178,7 +181,7 @@ func (p *Proxy) AddToPool() bool {
 		return false
 	}
 
-	pi := pool.PoolInt{Int: i}
+	pi := pool.NewIntItem(i)
 
 	p.pool.Push(pi)
 	return true
@@ -214,7 +217,7 @@ func (p *Proxy) Integer() (int64, error) {
 		return 0, errors.New("Failed to pop")
 	}
 
-	i := v.IntValue()
+	i := v.Int()
 
 	p.logger.Debug("return cached integer %d", i)
 

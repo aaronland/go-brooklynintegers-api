@@ -11,8 +11,9 @@ import (
 )
 
 type APIClient struct {
-	scheme   string
 	isa      string
+	http_client *http.Client
+	Scheme   string
 	Host     string
 	Endpoint string
 }
@@ -87,10 +88,13 @@ func (rsp *APIResponse) Error() error {
 
 func NewAPIClient() *APIClient {
 
+	http_client := &http.Client{}
+
 	return &APIClient{
-		scheme:   "http",
+		Scheme:   "https",
 		Host:     "api.brooklynintegers.com",
 		Endpoint: "rest/",
+		http_client: http_client,
 	}
 }
 
@@ -110,7 +114,7 @@ func (client *APIClient) CreateInteger() (int64, error) {
 
 func (client *APIClient) ExecuteMethod(method string, params *url.Values) (*APIResponse, error) {
 
-	url := client.scheme + "://" + client.Host + "/" + client.Endpoint
+	url := client.Scheme + "://" + client.Host + "/" + client.Endpoint
 
 	params.Set("method", method)
 
@@ -124,8 +128,7 @@ func (client *APIClient) ExecuteMethod(method string, params *url.Values) (*APIR
 
 	req.Header.Add("Accept-Encoding", "gzip")
 
-	cl := &http.Client{}
-	rsp, err := cl.Do(req)
+	rsp, err := client.http_client.Do(req)
 
 	if err != nil {
 		return nil, err
