@@ -12,8 +12,6 @@ rmdeps:
 
 deps:
 	@GOPATH=$(shell pwd) go get "github.com/tidwall/gjson"
-	@GOPATH=$(shell pwd) go get "github.com/whosonfirst/go-whosonfirst-pool"
-	@GOPATH=$(shell pwd) go get "github.com/whosonfirst/go-whosonfirst-log"
 
 vendor-deps: rmdeps deps
 	if test ! -d vendor; then mkdir vendor; fi
@@ -28,5 +26,4 @@ fmt:
 
 bin:	self
 	@GOPATH=$(shell pwd) go build -o bin/int cmd/int.go
-	@GOPATH=$(shell pwd) go build -o bin/proxy-server cmd/proxy-server.go
 
