@@ -70,9 +70,10 @@ Usage of ./bin/int:
 
 ### proxy-server
 
-This tool has been moved to the [go-brooklynintegers-proxy]() package.
+This tool has been moved to the [go-brooklynintegers-proxy](https://github.com/aaronland/go-brooklynintegers-proxy#proxy-server) package.
 
 ## See also
 
 * http://brooklynintegers.com/
 * http://brooklynintegers.com/api
+* https://github.com/aaronland/go-brooklynintegers-proxy
