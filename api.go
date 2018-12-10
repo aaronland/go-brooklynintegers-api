@@ -11,13 +11,23 @@ import (
 	"net/url"
 )
 
+// this is basically just so we can preserve backwards compatibility
+// even though the artisanalinteger.Client interface is the new new
+// (20181210/thisisaaronland)
+
+type BrooklynIntegersClient interface {
+	CreateInteger() (int64, error)
+	ExecuteMethod(string, *url.Values) (*APIResponse, error)
+}
+
 type APIClient struct {
-     artisanalinteger.Client
-	isa      string
-	http_client *http.Client
-	Scheme   string
-	Host     string
-	Endpoint string
+	artisanalinteger.Client
+	BrooklynIntegersClient // see above
+	isa                    string
+	http_client            *http.Client
+	Scheme                 string
+	Host                   string
+	Endpoint               string
 }
 
 type APIError struct {
@@ -93,11 +103,15 @@ func NewAPIClient() artisanalinteger.Client {
 	http_client := &http.Client{}
 
 	return &APIClient{
-		Scheme:   "https",
-		Host:     "api.brooklynintegers.com",
-		Endpoint: "rest/",
+		Scheme:      "https",
+		Host:        "api.brooklynintegers.com",
+		Endpoint:    "rest/",
 		http_client: http_client,
 	}
+}
+
+func (client *APIClient) CreateInteger() (int64, error) {
+	return client.NextInt()
 }
 
 func (client *APIClient) NextInt() (int64, error) {
@@ -105,7 +119,7 @@ func (client *APIClient) NextInt() (int64, error) {
 	params := url.Values{}
 	method := "brooklyn.integers.create"
 
-	rsp, err := client.executeMethod(method, &params)
+	rsp, err := client.ExecuteMethod(method, &params)
 
 	if err != nil {
 		return -1, err
@@ -114,7 +128,7 @@ func (client *APIClient) NextInt() (int64, error) {
 	return rsp.Int()
 }
 
-func (client *APIClient) executeMethod(method string, params *url.Values) (*APIResponse, error) {
+func (client *APIClient) ExecuteMethod(method string, params *url.Values) (*APIResponse, error) {
 
 	url := client.Scheme + "://" + client.Host + "/" + client.Endpoint
 
