@@ -1,23 +1,10 @@
-# github.com/aaronland/go-artisanal-integers v0.1.0
+# github.com/aaronland/go-artisanal-integers v0.1.1
 github.com/aaronland/go-artisanal-integers
-github.com/aaronland/go-artisanal-integers/client
-github.com/aaronland/go-artisanal-integers/server
-github.com/aaronland/go-artisanal-integers/service
-github.com/aaronland/go-artisanal-integers/application
-github.com/aaronland/go-artisanal-integers/engine
-github.com/aaronland/go-artisanal-integers/http
-github.com/aaronland/go-artisanal-integers/utils
-# github.com/aws/aws-lambda-go v1.10.0
-github.com/aws/aws-lambda-go/events
-github.com/aws/aws-lambda-go/lambda
-github.com/aws/aws-lambda-go/lambda/handlertrace
-github.com/aws/aws-lambda-go/lambda/messages
-github.com/aws/aws-lambda-go/lambdacontext
-# github.com/tidwall/gjson v1.2.1
+# github.com/aaronland/go-roster v0.0.1
+github.com/aaronland/go-roster
+# github.com/tidwall/gjson v1.3.5
 github.com/tidwall/gjson
 # github.com/tidwall/match v1.0.1
 github.com/tidwall/match
-# github.com/tidwall/pretty v0.0.0-20190325153808-1166b9ac2b65
+# github.com/tidwall/pretty v1.0.0
 github.com/tidwall/pretty
-# github.com/whosonfirst/algnhsa v0.1.0
-github.com/whosonfirst/algnhsa
