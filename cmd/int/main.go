@@ -2,9 +2,11 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"flag"
 	"fmt"
-	"github.com/aaronland/go-brooklynintegers-api"
+	"github.com/aaronland/go-artisanal-integers"	
+	_ "github.com/aaronland/go-brooklynintegers-api"
 	"io"
 	"log"
 	"os"
@@ -22,14 +24,20 @@ func main() {
 
 	flag.Parse()
 
+	ctx := context.Background()
+
+	client, err := artisanalinteger.NewClient(ctx, "brooklynintegers://")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	
 	writers := []io.Writer{
 		os.Stdout,
 	}
 
 	multi := io.MultiWriter(writers...)
 	writer := bufio.NewWriter(multi)
-
-	client := api.NewAPIClient()
 
 	wg := new(sync.WaitGroup)
 	mu := new(sync.Mutex)
