@@ -2,14 +2,15 @@
 github.com/aaronland/go-artisanal-integers
 # github.com/aaronland/go-roster v0.0.1
 github.com/aaronland/go-roster
-# github.com/cenkalti/backoff/v4 v4.0.0
+# github.com/andres-erbsen/clock v0.0.0-20160526145045-9e14626cd129
+github.com/andres-erbsen/clock
+# github.com/cenkalti/backoff/v4 v4.1.1
 github.com/cenkalti/backoff/v4
-# github.com/tidwall/gjson v1.5.0
+# github.com/tidwall/gjson v1.8.1
 github.com/tidwall/gjson
-# github.com/tidwall/match v1.0.1
+# github.com/tidwall/match v1.0.3
 github.com/tidwall/match
-# github.com/tidwall/pretty v1.0.0
+# github.com/tidwall/pretty v1.1.0
 github.com/tidwall/pretty
-# go.uber.org/ratelimit v0.1.0
+# go.uber.org/ratelimit v0.2.0
 go.uber.org/ratelimit
-go.uber.org/ratelimit/internal/clock
