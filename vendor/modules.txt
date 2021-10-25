@@ -6,11 +6,11 @@ github.com/aaronland/go-roster
 github.com/andres-erbsen/clock
 # github.com/cenkalti/backoff/v4 v4.1.1
 github.com/cenkalti/backoff/v4
-# github.com/tidwall/gjson v1.8.1
+# github.com/tidwall/gjson v1.9.3
 github.com/tidwall/gjson
-# github.com/tidwall/match v1.0.3
+# github.com/tidwall/match v1.1.1
 github.com/tidwall/match
-# github.com/tidwall/pretty v1.1.0
+# github.com/tidwall/pretty v1.2.0
 github.com/tidwall/pretty
 # go.uber.org/ratelimit v0.2.0
 go.uber.org/ratelimit
