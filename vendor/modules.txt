@@ -4,9 +4,9 @@ github.com/aaronland/go-artisanal-integers
 github.com/aaronland/go-roster
 # github.com/andres-erbsen/clock v0.0.0-20160526145045-9e14626cd129
 github.com/andres-erbsen/clock
-# github.com/cenkalti/backoff/v4 v4.1.1
+# github.com/cenkalti/backoff/v4 v4.1.2
 github.com/cenkalti/backoff/v4
-# github.com/tidwall/gjson v1.10.2
+# github.com/tidwall/gjson v1.13.0
 github.com/tidwall/gjson
 # github.com/tidwall/match v1.1.1
 github.com/tidwall/match
