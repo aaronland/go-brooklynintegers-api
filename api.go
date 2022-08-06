@@ -2,11 +2,10 @@ package api
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"github.com/aaronland/go-artisanal-integers"
 	"github.com/tidwall/gjson"
-	"io/ioutil"
+	"io"
 	_ "log"
 	"net/http"
 	"net/url"
@@ -55,7 +54,7 @@ func (rsp *APIResponse) Int() (int64, error) {
 	ints := gjson.GetBytes(rsp.raw, "integers.0.integer")
 
 	if !ints.Exists() {
-		return -1, errors.New("Failed to generate any integers")
+		return -1, fmt.Errorf("Failed to generate any integers")
 	}
 
 	i := ints.Int()
@@ -90,11 +89,11 @@ func (rsp *APIResponse) Error() error {
 	m := gjson.GetBytes(rsp.raw, "error.message")
 
 	if !c.Exists() {
-		return errors.New("Failed to parse error code")
+		return fmt.Errorf("Failed to parse error code")
 	}
 
 	if !m.Exists() {
-		return errors.New("Failed to parse error message")
+		return fmt.Errorf("Failed to parse error message")
 	}
 
 	err := APIError{
@@ -129,7 +128,7 @@ func (client *APIClient) NextInt() (int64, error) {
 	rsp, err := client.ExecuteMethod(method, &params)
 
 	if err != nil {
-		return -1, err
+		return -1, fmt.Errorf("Failed to execute method (%s), %w", method, err)
 	}
 
 	return rsp.Int()
@@ -144,7 +143,7 @@ func (client *APIClient) ExecuteMethod(method string, params *url.Values) (*APIR
 	req, err := http.NewRequest("POST", url, nil)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to create request (%s), %w", url, err)
 	}
 
 	req.URL.RawQuery = (*params).Encode()
@@ -154,15 +153,15 @@ func (client *APIClient) ExecuteMethod(method string, params *url.Values) (*APIR
 	rsp, err := client.http_client.Do(req)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to create request (%s), %w", url, err)
 	}
 
 	defer rsp.Body.Close()
 
-	body, err := ioutil.ReadAll(rsp.Body)
+	body, err := io.ReadAll(rsp.Body)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to read response, %w", err)
 	}
 
 	r := APIResponse{

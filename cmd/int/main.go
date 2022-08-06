@@ -5,7 +5,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/aaronland/go-artisanal-integers"	
+	"github.com/aaronland/go-artisanal-integers"
 	_ "github.com/aaronland/go-brooklynintegers-api"
 	"io"
 	"log"
@@ -31,7 +31,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	writers := []io.Writer{
 		os.Stdout,
 	}
