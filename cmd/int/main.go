@@ -5,7 +5,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/aaronland/go-artisanal-integers"
+	"github.com/aaronland/go-artisanal-integers/client"
 	_ "github.com/aaronland/go-brooklynintegers-api"
 	"io"
 	"log"
@@ -26,7 +26,7 @@ func main() {
 
 	ctx := context.Background()
 
-	client, err := artisanalinteger.NewClient(ctx, "brooklynintegers://")
+	client, err := client.NewClient(ctx, "brooklynintegers://")
 
 	if err != nil {
 		log.Fatal(err)
@@ -69,7 +69,7 @@ func main() {
 				return
 			}
 
-			bi, err := client.NextInt()
+			bi, err := client.NextInt(ctx)
 
 			if err != nil {
 				log.Println(err)
