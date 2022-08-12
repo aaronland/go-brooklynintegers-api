@@ -1,32 +1,85 @@
 package client
 
 import (
-	"errors"
-	"github.com/aaronland/go-artisanal-integers"
+	"context"
+	"fmt"
+	"github.com/aaronland/go-roster"
 	"net/url"
+	"sort"
 	"strings"
 )
 
-func NewArtisanalClient(proto string, u *url.URL) (artisanalinteger.Client, error) {
+type Client interface {
+	NextInt(context.Context) (int64, error)
+}
 
-	var cl artisanalinteger.Client
-	var err error
+type ClientInitializeFunc func(ctx context.Context, uri string) (Client, error)
 
-	switch strings.ToUpper(proto) {
+var clients roster.Roster
 
-	case "HTTP":
-		cl, err = NewHTTPClient(u)
-	case "HTTPS":
-		cl, err = NewHTTPClient(u)
-	case "TCP":
-		cl, err = NewTCPClient(u)
-	default:
-		return nil, errors.New("Invalid client protocol")
+func ensureClientRoster() error {
+
+	if clients == nil {
+
+		r, err := roster.NewDefaultRoster()
+
+		if err != nil {
+			return err
+		}
+
+		clients = r
 	}
+
+	return nil
+}
+
+func RegisterClient(ctx context.Context, scheme string, f ClientInitializeFunc) error {
+
+	err := ensureClientRoster()
+
+	if err != nil {
+		return err
+	}
+
+	return clients.Register(ctx, scheme, f)
+}
+
+func Schemes() []string {
+
+	ctx := context.Background()
+	schemes := []string{}
+
+	err := ensureClientRoster()
+
+	if err != nil {
+		return schemes
+	}
+
+	for _, dr := range clients.Drivers(ctx) {
+		scheme := fmt.Sprintf("%s://", strings.ToLower(dr))
+		schemes = append(schemes, scheme)
+	}
+
+	sort.Strings(schemes)
+	return schemes
+}
+
+func NewClient(ctx context.Context, uri string) (Client, error) {
+
+	u, err := url.Parse(uri)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return cl, nil
+	scheme := u.Scheme
+
+	i, err := clients.Driver(ctx, scheme)
+
+	if err != nil {
+		return nil, err
+	}
+
+	f := i.(ClientInitializeFunc)
+	return f(ctx, uri)
 }

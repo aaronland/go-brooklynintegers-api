@@ -1,8 +1,7 @@
-# github.com/aaronland/go-artisanal-integers v0.1.1
+# github.com/aaronland/go-artisanal-integers v0.9.1
 ## explicit
-github.com/aaronland/go-artisanal-integers
 github.com/aaronland/go-artisanal-integers/client
-# github.com/aaronland/go-roster v0.0.1
+# github.com/aaronland/go-roster v1.0.0
 github.com/aaronland/go-roster
 # github.com/andres-erbsen/clock v0.0.0-20160526145045-9e14626cd129
 github.com/andres-erbsen/clock

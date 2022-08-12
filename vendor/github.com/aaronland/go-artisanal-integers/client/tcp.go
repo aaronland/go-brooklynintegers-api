@@ -4,7 +4,7 @@ package client
 
 import (
 	"bufio"
-	"github.com/aaronland/go-artisanal-integers"
+	"context"
 	"net"
 	"net/url"
 	"strconv"
@@ -12,7 +12,7 @@ import (
 )
 
 type TCPClient struct {
-	artisanalinteger.Client
+	Client
 	url *url.URL
 }
 
@@ -25,7 +25,7 @@ func NewTCPClient(u *url.URL) (*TCPClient, error) {
 	return &cl, nil
 }
 
-func (cl *TCPClient) NextInt() (int64, error) {
+func (cl *TCPClient) NextInt(ctx context.Context) (int64, error) {
 
 	conn, err := net.Dial("tcp", cl.url.Host)
 
