@@ -19,7 +19,7 @@ import (
 func main() {
 
 	var count = flag.Int("count", 1, "The number of Brooklyn Integers to mint.")
-	var clients = flag.Int("clients", 10, "...")
+	var clients = flag.Int("clients", 1, "...")
 	var timings = flag.Bool("timings", false, "...")
 
 	flag.Parse()

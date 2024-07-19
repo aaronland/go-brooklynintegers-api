@@ -4,9 +4,9 @@ go 1.18
 
 require (
 	github.com/aaronland/go-artisanal-integers v0.9.1
-	github.com/cenkalti/backoff/v4 v4.2.1
-	github.com/tidwall/gjson v1.16.0
-	go.uber.org/ratelimit v0.3.0
+	github.com/cenkalti/backoff/v4 v4.3.0
+	github.com/tidwall/gjson v1.17.1
+	go.uber.org/ratelimit v0.3.1
 )
 
 require (
