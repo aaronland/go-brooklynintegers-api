@@ -1,11 +1,11 @@
 module github.com/aaronland/go-brooklynintegers-api
 
-go 1.18
+go 1.22
 
 require (
 	github.com/aaronland/go-artisanal-integers v0.9.1
 	github.com/cenkalti/backoff/v4 v4.3.0
-	github.com/tidwall/gjson v1.17.1
+	github.com/tidwall/gjson v1.18.0
 	go.uber.org/ratelimit v0.3.1
 )
 
