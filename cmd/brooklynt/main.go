@@ -5,8 +5,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/aaronland/go-artisanal-integers/client"
-	_ "github.com/aaronland/go-brooklynintegers-api"
 	"io"
 	"log"
 	"os"
@@ -14,6 +12,9 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/aaronland/go-artisanal-integers/client"
+	_ "github.com/aaronland/go-brooklynintegers-api"	
 )
 
 func main() {
