@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/aaronland/go-artisanal-integers/client"
-	_ "github.com/aaronland/go-brooklynintegers-api"	
+	_ "github.com/aaronland/go-brooklynintegers-api"
 )
 
 func main() {
