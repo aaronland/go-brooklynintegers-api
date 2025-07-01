@@ -204,7 +204,7 @@ func (client *APIClient) executeMethod(ctx context.Context, method string, param
 	params.Set("method", method)
 
 	logger.Debug("Execute", "url", url)
-	
+
 	req, err := http.NewRequestWithContext(ctx, "POST", url, nil)
 
 	if err != nil {
@@ -229,8 +229,6 @@ func (client *APIClient) executeMethod(ctx context.Context, method string, param
 		logger.Error("API did not return OK", "code", rsp.StatusCode, "message", rsp.Status)
 		return nil, fmt.Errorf("API did not return OK")
 	}
-	
-	slog.Info("WTF", "status", rsp.StatusCode)
 
 	body, err := io.ReadAll(rsp.Body)
 
